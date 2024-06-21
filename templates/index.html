@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed Change Calculator</title>
+</head>
+<body>
+    <form id="myForm">
+        <label for="remaining_distance">剩余的距离(nm)：</label>
+        <input type="text" id="remaining_distance" name="remaining_distance"><br>
+        <label for="time1">请输入开始时间：</label>
+        <input type="datetime-local" id="time1" name="time1"><br>
+        <label for="time2">请输入RTA：</label>
+        <input type="datetime-local" id="time2" name="time2"><br>
+        <label for="fullspeed">FULLSPEED:</label>
+        <input type="number" step="0.1" id="fullspeed" name="fullspeed"><br>
+        <label for="ecospeed">ECOSPEED:</label>
+        <input type="number" step="0.1" id="ecospeed" name="ecospeed"><br>
+        <label for="travel_time_at_12_knots">请输入以FULL SPEED航行的时间(hours)：</label>
+        <input type="text" id="travel_time_at_12_knots" name="travel_time_at_12_knots"><br>
+        <input type="submit" value="Submit">
+    </form>
+    
+    
+    <div id="result"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#myForm').submit(function(e){
+                e.preventDefault();
+                var formData = $('#myForm').serialize();
+                $.ajax({
+                    type: "POST",
+                    url: "/result",
+                    data: formData,
+                    success: function(response){
+                        $('#result').html(`
+                            <p>当前距离RTA还有: ${response.hour_difference} hours</p>
+                            <p>以ECO SPEED航行的时间为: ${response.time_at_10_knots} hours</p>
+                            <p>ETA为: ${response.new_time}</p>
+                        `);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
